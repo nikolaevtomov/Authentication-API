@@ -32,8 +32,17 @@ userSchema.pre('save', function(next) {
   });
 });
 
+// add global method to user Schema, compate if password matches
+userSchema.methods.comparePassword = function(candidatePassword, callback) {
+
+  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+    if(err) { return callback(err) };
+    callback(null, isMatch);
+  });
+
+};
+
 // Create the model class
 const ModelClass = mongoose.model('users', userSchema);
-//                                 ^^collection
-//                                   name in DB
+//                                 ^^collection name in DB
 module.exports = ModelClass;
