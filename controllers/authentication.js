@@ -9,13 +9,18 @@ function tokenForUser(user) {
   //     jwt props->  ^^subject to, ^^issued at time
 }
 
-exports.signin = function(req, res, next) {
+exports.login = function(req, res, next) {
   // User email and password has already been authenticated
-  // give a token
-  res.send({ token: tokenForUser(req.user) });
+  // give a token and data (response)
+  res.send({
+    message: 'OK',
+    error: false,
+    token: tokenForUser(req.user),
+    data: 'data'
+  });
 }
 
-exports.signup = function(req, res, next) {
+exports.register = function(req, res, next) {
 
   const email = req.body.email;
   const password = req.body.password;
@@ -30,7 +35,7 @@ exports.signup = function(req, res, next) {
 
     if(err) { return next(err) };
 
-    // If user is already signed up, return a message
+    // If user is already registered, return a message
     if(existingUser) {
       return res.status(422).send({ error: 'Email is in use!' });
     }
