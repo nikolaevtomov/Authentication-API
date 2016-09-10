@@ -8,10 +8,11 @@ const config = require('../config');
 
 // Create Local Strategy
 const localOptions = {
-  usernameField: 'email'
+  usernameField: 'email',
+  passReqToCallback : true,
 };
 
-const localLogin = new LocalStrategy(localOptions, function(email, password, done) {
+const localLogin = new LocalStrategy(localOptions, function(req, email, password, done) {
   // Verify the user with username  (^^email, in this case) and password
 
   UserModelClass.findOne({ email: email }, function(err, user) {
@@ -21,7 +22,7 @@ const localLogin = new LocalStrategy(localOptions, function(email, password, don
     // IF the email and password correct
     user.comparePassword(password, function(err, isMatch) {
       if(err) { return done(err); }
-      if(!isMatch) { return done(null, false); }
+      if(!isMatch) { return done(null, false, { message: 'Incorrect password.' }); }
       // otherwise call done with false
       return done(null, user);
     });
@@ -50,6 +51,15 @@ const jwtLogin = new JwtStrategy(JwtOptions, function(payload, done) {
     }
   });
 
+});
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+  // done(null, user._id);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user);
 });
 
 // Tell Passport to use this startegies

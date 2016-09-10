@@ -3,8 +3,8 @@ const passport = require('passport');
 const Authentication = require('./controllers/authentication');
 const PassportService = require('./services/passport');
 
-const requireAuth = passport.authenticate('jwt', { session: false });
-const requireLogin = passport.authenticate('local', { session: false });
+const requireAuth = passport.authenticate('jwt', { session: true });
+const requireLogin = passport.authenticate('local', { session: true, failureFlash: true });
 
 module.exports = function(app) {
 
