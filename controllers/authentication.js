@@ -16,7 +16,9 @@ exports.login = function(req, res, next) {
     message: 'OK',
     error: false,
     token: tokenForUser(req.user),
-    data: 'data'
+    email: req.user.email,
+    name: req.user.name,
+    surname: req.user.surname,
   });
 }
 
@@ -24,10 +26,13 @@ exports.register = function(req, res, next) {
 
   const email = req.body.email;
   const password = req.body.password;
+  const name = req.body.name;
+  const surname = req.body.surname;
+
 
   // Check if email and password have been provided
-  if(!email || !password) {
-    return res.status(422).send({ error: 'You must provide email and password!' });
+  if(!email || !password || !name || !surname) {
+    return res.status(422).send({ error: 'You must provide email, password name and surname!' });
   }
 
   // Check if the user is axist
@@ -43,7 +48,9 @@ exports.register = function(req, res, next) {
     // If a user with unique email does NOT exist, create and save user record
     const newUser = new UserModelClass({
       email: email,
-      password: password
+      password: password,
+      name: name,
+      surname: surname,
     });
 
     newUser.save(function(err) {
