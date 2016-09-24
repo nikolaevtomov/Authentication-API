@@ -13,8 +13,7 @@ exports.login = function(req, res, next) {
   // User email and password has already been authenticated
   // give a token and data (response)
   res.send({
-    message: 'OK',
-    error: false,
+    ok: true,
     token: tokenForUser(req.user),
     email: req.user.email,
     name: req.user.name,
@@ -57,7 +56,10 @@ exports.register = function(req, res, next) {
       if(err) { return next(err) };
 
       // Respond to request indicating the user was created
-      res.json({ token: tokenForUser(newUser) });
+      res.json({
+        ok: true,
+        token: tokenForUser(newUser), 
+      });
     });
 
   });
